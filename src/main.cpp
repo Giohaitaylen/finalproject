@@ -18,7 +18,6 @@ namespace
     uint16_t socketTimeout = 5; 
 }
 
-
 // PIR Sensor Pin
 const int pirPin = 5;  // GPIO5
 int motionState = LOW;
