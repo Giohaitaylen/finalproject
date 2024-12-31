@@ -1,0 +1,234 @@
+[
+    {
+        "id": "7abdf72e4d4a7cb6",
+        "type": "tab",
+        "label": "Flow 7",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "8a3ce72f325ff5ec",
+        "type": "mqtt in",
+        "z": "7abdf72e4d4a7cb6",
+        "name": "PIR Sensor",
+        "topic": "home/motion",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "203c3e8db77ffbae",
+        "nl": false,
+        "rap": false,
+        "inputs": 0,
+        "x": 150,
+        "y": 180,
+        "wires": [
+            [
+                "3ea25f2612d24202"
+            ]
+        ]
+    },
+    {
+        "id": "152241fca55af900",
+        "type": "delay",
+        "z": "7abdf72e4d4a7cb6",
+        "name": "Rate Limit",
+        "pauseType": "rate",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "10",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 760,
+        "y": 120,
+        "wires": [
+            [
+                "b146fac0d6744b0f"
+            ]
+        ]
+    },
+    {
+        "id": "b146fac0d6744b0f",
+        "type": "telegram sender",
+        "z": "7abdf72e4d4a7cb6",
+        "name": "",
+        "bot": "672a3d1b35eff0bb",
+        "haserroroutput": false,
+        "outputs": 1,
+        "x": 970,
+        "y": 120,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "e6c41a628d778f6b",
+        "type": "function",
+        "z": "7abdf72e4d4a7cb6",
+        "name": "function 6",
+        "func": "msg.payload = {\n    chatId: \"1692141935\",  \n    type: \"message\",\n    content: \"Motion detected!\"\n};\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 560,
+        "y": 120,
+        "wires": [
+            [
+                "152241fca55af900"
+            ]
+        ]
+    },
+    {
+        "id": "3ea25f2612d24202",
+        "type": "switch",
+        "z": "7abdf72e4d4a7cb6",
+        "name": "Check Motion",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "Motion detected",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 340,
+        "y": 180,
+        "wires": [
+            [
+                "e6c41a628d778f6b",
+                "343e728170fb9751"
+            ]
+        ]
+    },
+    {
+        "id": "343e728170fb9751",
+        "type": "function",
+        "z": "7abdf72e4d4a7cb6",
+        "name": "function 7",
+        "func": "msg.topic = \"INSERT INTO motion_events (event_status) VALUES ('Motion detected')\";\nmsg.params = [msg.payload];\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 560,
+        "y": 240,
+        "wires": [
+            [
+                "7528c18b62f610a5"
+            ]
+        ]
+    },
+    {
+        "id": "7528c18b62f610a5",
+        "type": "mysql",
+        "z": "7abdf72e4d4a7cb6",
+        "mydb": "20e52a0b7f582cb0",
+        "name": "",
+        "x": 760,
+        "y": 240,
+        "wires": [
+            [
+                "3b02943f9396f90a"
+            ]
+        ]
+    },
+    {
+        "id": "3b02943f9396f90a",
+        "type": "debug",
+        "z": "7abdf72e4d4a7cb6",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 940,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "203c3e8db77ffbae",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "0003f0f014c248ef859fcb26c79c96fd.s1.eu.hivemq.cloud",
+        "port": "8883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "672a3d1b35eff0bb",
+        "type": "telegram bot",
+        "botname": "Conmuamenmen_bot",
+        "usernames": "",
+        "chatids": "",
+        "baseapiurl": "",
+        "testenvironment": false,
+        "updatemode": "polling",
+        "addressfamily": "",
+        "pollinterval": "300",
+        "usesocks": false,
+        "sockshost": "",
+        "socksprotocol": "socks5",
+        "socksport": "6667",
+        "socksusername": "anonymous",
+        "sockspassword": "",
+        "bothost": "",
+        "botpath": "",
+        "localbotport": "8443",
+        "publicbotport": "8443",
+        "privatekey": "",
+        "certificate": "",
+        "useselfsignedcertificate": false,
+        "sslterminated": false,
+        "verboselogging": false
+    },
+    {
+        "id": "20e52a0b7f582cb0",
+        "type": "MySQLdatabase",
+        "name": "",
+        "host": "localhost",
+        "port": "3306",
+        "db": "detectlog",
+        "tz": "",
+        "charset": "UTF8"
+    }
+]
